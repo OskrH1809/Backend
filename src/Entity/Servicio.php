@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ServicioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,22 @@ class Servicio
      * @ORM\Column(type="string", length=300,nullable=true)
      */
     private $fichero;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Tarea::class, mappedBy="servicio")
+     */
+    private $tareas;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="servicio")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->tareas = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -94,6 +112,63 @@ class Servicio
     public function setFichero($fichero)
     {
         $this->fichero = $fichero;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tarea[]
+     */
+    public function getTareas(): Collection
+    {
+        return $this->tareas;
+    }
+
+    public function addTarea(Tarea $tarea): self
+    {
+        if (!$this->tareas->contains($tarea)) {
+            $this->tareas[] = $tarea;
+            $tarea->setServicio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarea(Tarea $tarea): self
+    {
+        if ($this->tareas->removeElement($tarea)) {
+            // set the owning side to null (unless already changed)
+            if ($tarea->getServicio() === $this) {
+                $tarea->setServicio(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addServicio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeServicio($this);
+        }
 
         return $this;
     }

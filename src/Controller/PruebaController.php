@@ -27,24 +27,24 @@ class PruebaController extends AbstractController
     }
 
 
-     /**
-     * @Route("/infocards", name="pagado", methods={"get"})
-     */
-    public function getPagado(MesRepository $mesRepository): Response
-    {   
-        $meses = $mesRepository->findAll();
-        $data=[];
-        foreach($meses as $mes){
+    //  /**
+    //  * @Route("/infocards", name="pagado", methods={"get"})
+    //  */
+    // public function getPagado(MesRepository $mesRepository): Response
+    // {   
+    //     $meses = $mesRepository->findAll();
+    //     $data=[];
+    //     foreach($meses as $mes){
             
-            $data[]= [
-                'id'=>$mes->getId(),
-                'nombre'=>$mes->getNombre()
+    //         $data[]= [
+    //             'id'=>$mes->getId(),
+    //             'nombre'=>$mes->getNombre()
     
-            ];
-        }
+    //         ];
+    //     }
        
-        return new JsonResponse( $data, Response::HTTP_OK);
-    }
+    //     return new JsonResponse( $data, Response::HTTP_OK);
+    // }
 
     // private $ServicioRepository;
     

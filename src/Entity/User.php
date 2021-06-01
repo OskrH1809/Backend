@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -10,7 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
-class User implements UserInterface
+class User
+// class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -24,16 +27,32 @@ class User implements UserInterface
      */
     private $email;
 
-    /**
-     * @ORM\Column(type="json")
+   /**
+     * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $roles = [];
+    private $nombre;
+
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Perfil::class, inversedBy="users")
+     */
+    private $perfil;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Servicio::class, inversedBy="users")
+     */
+    private $servicio;
+
+    public function __construct()
+    {
+        $this->servicio = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,24 +81,7 @@ class User implements UserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
+  
 
     /**
      * @see UserInterface
@@ -114,5 +116,61 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * Get the value of nombre
+     */ 
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set the value of nombre
+     *
+     * @return  self
+     */ 
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function getPerfil(): ?Perfil
+    {
+        return $this->perfil;
+    }
+
+    public function setPerfil(?Perfil $perfil): self
+    {
+        $this->perfil = $perfil;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Servicio[]
+     */
+    public function getServicio(): Collection
+    {
+        return $this->servicio;
+    }
+
+    public function addServicio(Servicio $servicio): self
+    {
+        if (!$this->servicio->contains($servicio)) {
+            $this->servicio[] = $servicio;
+        }
+
+        return $this;
+    }
+
+    public function removeServicio(Servicio $servicio): self
+    {
+        $this->servicio->removeElement($servicio);
+
+        return $this;
     }
 }
