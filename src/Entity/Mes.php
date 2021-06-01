@@ -17,49 +17,23 @@ class Mes
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $anio;
+
 
      /**
      * @ORM\Column(type="string", length=100)
      */
     private $nombre;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $pagado;
+    
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAnio(): ?string
-    {
-        return $this->anio;
-    }
+  
 
-    public function setAnio(string $anio): self
-    {
-        $this->anio = $anio;
-
-        return $this;
-    }
-
-    public function getPagado(): ?bool
-    {
-        return $this->pagado;
-    }
-
-    public function setPagado(bool $pagado): self
-    {
-        $this->pagado = $pagado;
-
-        return $this;
-    }
+  
 
     /**
      * Get the value of nombre

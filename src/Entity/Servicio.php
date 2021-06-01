@@ -28,9 +28,14 @@ class Servicio
     private $precio;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean",nullable=true)
      */
     private $estado;
+
+     /**
+     * @ORM\Column(type="string", length=300,nullable=true)
+     */
+    private $fichero;
 
     public function getId(): ?int
     {
@@ -69,6 +74,26 @@ class Servicio
     public function setEstado(bool $estado): self
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fichero
+     */ 
+    public function getFichero()
+    {
+        return $this->fichero;
+    }
+
+    /**
+     * Set the value of fichero
+     *
+     * @return  self
+     */ 
+    public function setFichero($fichero)
+    {
+        $this->fichero = $fichero;
 
         return $this;
     }

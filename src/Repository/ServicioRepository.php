@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Servicio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,9 +16,20 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ServicioRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Servicio::class);
+    // public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
+    // {
+    //     parent::__construct($registry, Servicio::class);
+    //     $this->manager = $manager;
+    // }
+
+    public function saveServicios($nombre, $precio){
+        $nuevoServicio = new Servicio();
+        $nuevoServicio
+            ->setNombre($nombre)
+            ->setPrecio($precio);
+        
+        $this->manager->persist($nuevoServicio);
+        $this->manager->flush();
     }
 
     // /**
@@ -47,4 +60,50 @@ class ServicioRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    private $manager;
+
+    public function __construct
+    (
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+    )
+    {
+        parent::__construct($registry, Servicio::class);
+        $this->manager = $manager;
+    }
+
+    public function saveCustomer($nombre, $precio)
+    {
+        $newservicio = new Servicio();
+
+        $newservicio
+            ->setNombre($nombre)
+            ->setPrecio($precio);
+         
+
+        $this->manager->persist($newservicio);
+        $this->manager->flush();
+    }
+
+    public function updateservicio(Servicio $servicio):Servicio
+    {
+        $this->manager->persist($servicio);
+        $this->manager->flush();
+
+        return $servicio;
+    }
+
+public function removeServicio(Servicio $customer)
+{
+    $this->manager->remove($customer);
+    $this->manager->flush();
 }
+    
+}
+
+
+
+
+
+
