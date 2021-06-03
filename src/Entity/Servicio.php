@@ -29,10 +29,7 @@ class Servicio
      */
     private $precio;
 
-    /**
-     * @ORM\Column(type="boolean",nullable=true)
-     */
-    private $estado;
+ 
 
      /**
      * @ORM\Column(type="string", length=300,nullable=true)
@@ -48,6 +45,11 @@ class Servicio
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="servicio")
      */
     private $users;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Estado::class, inversedBy="servicios")
+     */
+    private $estado;
 
     public function __construct()
     {
@@ -80,18 +82,6 @@ class Servicio
     public function setPrecio(float $precio): self
     {
         $this->precio = $precio;
-
-        return $this;
-    }
-
-    public function getEstado(): ?bool
-    {
-        return $this->estado;
-    }
-
-    public function setEstado(bool $estado): self
-    {
-        $this->estado = $estado;
 
         return $this;
     }
@@ -169,6 +159,18 @@ class Servicio
         if ($this->users->removeElement($user)) {
             $user->removeServicio($this);
         }
+
+        return $this;
+    }
+
+    public function getEstado(): ?Estado
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(?Estado $estado): self
+    {
+        $this->estado = $estado;
 
         return $this;
     }

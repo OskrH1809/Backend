@@ -2,9 +2,13 @@
 
 namespace App\Repository;
 
+use App\Controller\ServicioController;
+use App\Entity\Servicio;
 use App\Entity\Tarea;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\ServicioRepository;
 
 /**
  * @method Tarea|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,11 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TareaRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Tarea::class);
-    }
-
+    
     // /**
     //  * @return Tarea[] Returns an array of Tarea objects
     //  */
@@ -47,4 +47,49 @@ class TareaRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    private $manager;
+
+    public function __construct
+    (
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+    )
+    {
+        parent::__construct($registry, Tarea::class);
+        $this->manager = $manager;
+    }
+
+    public function saveTarea($titulo, $servicio, $descripcion, $documento)
+    {    
+    
+        
+       
+        $new_tarea = new Tarea();
+
+        $new_tarea
+            ->setServicio($servicio)
+            ->setTitulo($titulo)       
+            ->setDescripcion($descripcion)
+            ->setDocumento($documento);
+         
+
+        $this->manager->persist($new_tarea);
+        $this->manager->flush();
+    }
+
+    public function updatetarea(Tarea $tarea):Tarea
+    {
+        $this->manager->persist($tarea);
+        $this->manager->flush();
+
+        return $tarea;
+    }
+
+    public function removeTarea(Tarea $Tarea)
+{
+    $this->manager->remove($Tarea);
+    $this->manager->flush();
+}
+
 }

@@ -49,9 +49,15 @@ class User
      */
     private $servicio;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DatosAdministrativos::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $datosAdministrativos;
+
     public function __construct()
     {
         $this->servicio = new ArrayCollection();
+        $this->datosAdministrativos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,6 +176,36 @@ class User
     public function removeServicio(Servicio $servicio): self
     {
         $this->servicio->removeElement($servicio);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DatosAdministrativos[]
+     */
+    public function getDatosAdministrativos(): Collection
+    {
+        return $this->datosAdministrativos;
+    }
+
+    public function addDatosAdministrativo(DatosAdministrativos $datosAdministrativo): self
+    {
+        if (!$this->datosAdministrativos->contains($datosAdministrativo)) {
+            $this->datosAdministrativos[] = $datosAdministrativo;
+            $datosAdministrativo->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDatosAdministrativo(DatosAdministrativos $datosAdministrativo): self
+    {
+        if ($this->datosAdministrativos->removeElement($datosAdministrativo)) {
+            // set the owning side to null (unless already changed)
+            if ($datosAdministrativo->getUser() === $this) {
+                $datosAdministrativo->setUser(null);
+            }
+        }
 
         return $this;
     }
